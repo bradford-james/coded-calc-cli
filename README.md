@@ -1,6 +1,6 @@
 # Calculator
 
-### \#TODO
+## \#TODO
 
 - [x] Accept input as singles (number or operand)
 - [x] Will have an item in memory as rolling value
@@ -24,34 +24,34 @@
 - [x] Hitting enter again will repeat the operation
 - [x] Clear and all clear
 
-### Folder Structure
+## Folder Structure
 
-- `Coded-Calculator`
+- **Coded-Calculator**
 
-  - `Interface`
-  - `Data`
+  - **Interface**
+  - **Data**
     - db.json
-  - `Utils`
+  - **Utils**
     - Error Handling
     - Logging
-  - `Tests`
+  - **Tests**
     - test.js
   - index.js
   - calc.js
 
-  ### Commands
+### Commands
 
-  Numeric Buttons
+Numeric Buttons
 
-  - ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
+- **ONE**, **TWO**, **THREE**, **FOUR**, **FIVE**, **SIX**, **SEVEN**, **EIGHT**, **NINE**, **ZERO**
 
-  Clear Buttons
+Clear Buttons
 
-  - CLR - will only clear the second value (addend, subtrahend, multipier, divisor) if present, otherwise will clear all memory. Memory cache is not cleared
-  - ALL_CLR - will clear all memory including the memory cache
+- **CLR** - will only clear the second value (addend, subtrahend, multipier, divisor) if present, otherwise will clear all memory. Memory cache is not cleared
+- **ALL_CLR** - will clear all memory including the memory cache
 
-  Operand Buttons
+Operand Buttons
 
-  - ADD, SUB, MUL, DIV
+- **ADD**, **SUB**, **MUL**, **DIV**
 
-  `Read the test cases for more information on application functionality`
+**Read the test cases for more information on application functionality**
