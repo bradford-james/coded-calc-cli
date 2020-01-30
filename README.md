@@ -27,6 +27,7 @@
 ### Folder Structure
 
 - `Coded-Calculator`
+
   - `Interface`
   - `Data`
     - db.json
@@ -37,3 +38,20 @@
     - test.js
   - index.js
   - calc.js
+
+  ### Commands
+
+  Numeric Buttons
+
+  - ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
+
+  Clear Buttons
+
+  - CLR - will only clear the second value (addend, subtrahend, multipier, divisor) if present, otherwise will clear all memory. Memory cache is not cleared
+  - ALL_CLR - will clear all memory including the memory cache
+
+  Operand Buttons
+
+  - ADD, SUB, MUL, DIV
+
+  `Read the test cases for more information on application functionality`
