@@ -1,0 +1,98 @@
+{
+    "commands": [
+        {
+            "code": "ONE",
+            "name": "One",
+            "type": "numeric",
+            "value": "1"
+        },
+        {
+            "code": "TWO",
+            "name": "Two",
+            "type": "numeric",
+            "value": "2"
+        },
+        {
+            "code": "THREE",
+            "name": "Three",
+            "type": "numeric",
+            "value": "3"
+        },
+        {
+            "code": "FOUR",
+            "name": "Four",
+            "type": "numeric",
+            "value": "4"
+        },
+        {
+            "code": "FIVE",
+            "name": "Five",
+            "type": "numeric",
+            "value": "5"
+        },
+        {
+            "code": "SIX",
+            "name": "Six",
+            "type": "numeric",
+            "value": "6"
+        },
+        {
+            "code": "SEVEN",
+            "name": "Seven",
+            "type": "numeric",
+            "value": "7"
+        },
+        {
+            "code": "EIGHT",
+            "name": "Eight",
+            "type": "numeric",
+            "value": "8"
+        },
+        {
+            "code": "NINE",
+            "name": "Nine",
+            "type": "numeric",
+            "value": "9"
+        },
+        {
+            "code": "ZERO",
+            "name": "Zero",
+            "type": "numeric",
+            "value": "0"
+        },
+        {
+            "code": "ADD",
+            "name": "Addition",
+            "type": "op_continue",
+            "execution": "Number(val1) + Number(val2)"
+        },
+        {
+            "code": "SUB",
+            "name": "Subract",
+            "type": "op_continue",
+            "execution": "Number(val1) - Number(val2)"
+        },
+        {
+            "code": "MUL",
+            "name": "Multiply",
+            "type": "op_continue",
+            "execution": "Number(val1) * Number(val2)"
+        },
+        {
+            "code": "DIV",
+            "name": "Divide",
+            "type": "op_continue",
+            "execution": "Number(val1) / Number(val2)"
+        },
+        {
+            "code": "EQ",
+            "name": "Equals",
+            "type": "op_exec"
+        },
+        {
+            "code": "ALL_CLR",
+            "name": "All Clear",
+            "type": "clear"
+        }
+    ]
+}
