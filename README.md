@@ -2,35 +2,38 @@
 
 ### \#TODO
 
-* accept input as singles (number or operand)
-* will have an item in memory as rolling value
-* will need memory for operand
-* need cache for cached value
-	* 5 cached values, which can be iterated through
-		* add button, iterate, and clear
-		* what does All Clear do to cache?
-* Some operaters don't require a second value
-* A number must be the first input
-* Sequential operands will replace each other
-* Prevent multiple decimals
-* Some number modifiers (+/-)
-* display limit
-* decimal limit
-* value limit (switch to exponent?)
-* handle errors like divide by zero
-* square root needs an imaginary number handler
-* always show zero if nothing in memory, initialization
-* hitting enter again will repeat the operation
-* clear and all clear
+- [x] Accept input as singles (number or operand)
+- [x] Will have an item in memory as rolling value
+- [x] Will need memory for operand
+- [ ] Need cache for cached value
+  - [ ] 5 cached values, which can be iterated through
+  - [ ] Add button, iterate, and clear
+  - [ ] What does All Clear do to cache?
+- [x] Some operaters don't require a second value
+- [x] A number must be the first input
+- [x] Sequential operands will replace each other
+- [ ] Implement Decimals
+- [ ] Prevent multiple decimals
+- [ ] Some number modifiers (+/-)
+- [ ] Display limit (rounding)
+- [ ] Decimal limit (rounding)
+- [ ] Value limit (switch to exponent?)
+- [ ] Handle errors like divide by zero
+- [ ] Square root needs an imaginary number handler
+- [x] Always show zero if nothing in memory, initialization
+- [x] Hitting enter again will repeat the operation
+- [x] Clear and all clear
 
-----------------
 ### Folder Structure
 
-
-* Main
-    * Interface
-    * Business Logic
-    * Technical
-        * Error Handling
-        * Logging
-    * Tests
+- `Coded-Calculator`
+  - `Interface`
+  - `Data`
+    - db.json
+  - `Utils`
+    - Error Handling
+    - Logging
+  - `Tests`
+    - test.js
+  - index.js
+  - calc.js

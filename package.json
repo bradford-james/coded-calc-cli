@@ -7,7 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node index",
+    "format": "prettier \"**/*.+(js|jsx|json|yml|yaml|css|ts|tsx)\" --write"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,7 @@
   "dependencies": {
     "lowdb": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
 }

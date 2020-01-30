@@ -1,90 +1,95 @@
-// import calc_data as calc_data
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const path = require('path');
+const getCmdObj = require("./utils/getCmdObj");
 
-module.exports = {
-    val1: '',
-    val2: '',
-    eqMem: '',
-    operand: '',
-    operation: '',
-    memCache: [],
-    getDisplay: function () {
-        return Number(this.val2 != '' ? this.val2 : (this.val1 != '' ? this.val1 : 0));
-    },
-    handleInput: async function (receivedInput) {
-        input = cleanseInput(receivedInput);
-        var commandObj = await getLookup(input)
+module.exports = class Calculator {
+  constructor() {
+    (this.val1 = ""),
+      (this.val2 = ""),
+      (this.eqMem = ""),
+      (this.eqOpMem = ""),
+      (this.operand = ""),
+      (this.operation = ""),
+      (this.memCache = []);
+  }
 
-        if (commandObj['code'] != 'EQ') eqMem = '';
+  get display() {
+    return Number(
+      this.val2 != "" ? this.val2 : this.val1 != "" ? this.val1 : 0
+    );
+  }
 
-        switch (commandObj['type']) {
-            case 'numeric':
-                if (!this.operand) {
-                    this.val1 = this.val1 + commandObj['value'];
-                } else {
-                    this.val2 = this.val2 + commandObj['value'];
-                }
-                break;
+  async handleInput(receivedInput) {
+    var cmdObj = await getCmdObj(receivedInput);
 
-            case 'op_continue':
-                if (!this.val1) return 'ERROR';
-                if (this.val2 != '') {
-                    this.val1 = this.operation(this.val1, this.val2).toString();
-                    this.val2 = '';
-                }
-                this.operand = commandObj['code'];
-                this.operation = new Function('val1', 'val2', 'return ' + commandObj['execution']);
-                break;
+    // eqMem is presenved for sequential Equals operations
+    if (cmdObj["code"] != "EQ") {
+      this.eqMem = "";
+      this.eqOpMem = "";
+    }
 
-            case 'op_exec':
-                this.val1 = (commandObj['code'] = 'EQ' ? this.operation(this.val1, this.val2).toString() : '');
-                this.eqMem = this.val2;
-                this.val2 = '';
-                break;
-
-            case 'clear':
-                if (commandObj['code'] = 'ALL_CLR') {
-                    this.val2 = '';
-                    this.val1 = '';
-                    this.eqMem = '';
-                    this.operand = '';
-                    this.operation = '';
-                }
-                break;
-
-            default:
-                return 'ERROR';
+    switch (cmdObj["type"]) {
+      case "numeric":
+        if (this.operand == "equals") {
+          this.val1 = "";
+          this.operand = "";
         }
+        if (!this.operand) {
+          this.val1 = this.val1 + cmdObj["value"];
+        } else {
+          this.val2 = this.val2 + cmdObj["value"];
+        }
+        break;
+
+      case "op_continue":
+        if (!this.val1) return "NON_ALLOWABLE";
+        if (this.val2 != "") {
+          this.val1 = this.operation(this.val1, this.val2).toString();
+          this.val2 = "";
+        }
+        this.operand = cmdObj["code"];
+        this.operation = new Function(
+          "val1",
+          "val2",
+          "return " + cmdObj["execution"]
+        );
+        break;
+
+      case "op_exec":
+        if (!this.val1 || !this.operand) return "NON_ALLOWABLE";
+        if (cmdObj["code"] == "EQ") {
+          if (!this.val2) this.val2 = this.eqMem;
+          if (!this.operation) this.operation = this.eqOpMem;
+          this.val1 = this.operation(this.val1, this.val2).toString();
+          this.eqMem = this.val2;
+          this.eqOpMem = this.operation;
+        }
+        this.val2 = "";
+        this.operand = "equals";
+        this.operation = "";
+        break;
+
+      case "clear":
+        if (cmdObj["code"] == "ALL_CLR") {
+          this.val2 = "";
+          this.val1 = "";
+          this.eqMem = "";
+          this.eqOpMem = "";
+          this.operand = "";
+          this.operation = "";
+        } else if (cmdObj["code"] == "CLR") {
+          if (this.val2 != "") {
+            this.val2 = "";
+          } else {
+            this.val1 = "";
+            this.eqMem = "";
+            this.eqOpMem = "";
+            this.operand = "";
+            this.operation = "";
+          }
+        }
+        break;
+
+      default:
+        return "ERROR";
     }
-}
-
-
-// -- UTILS --
-
-
-async function getLookup(val) {
-    const writeDirectory = __dirname;
-    const writeFileURL = path.resolve(writeDirectory, './db.json');
-    const adapter = new FileSync(writeFileURL);
-    const db = low(adapter);
-
-    try {
-        commandObj = await db.get('commands').find({ code: val }).value();
-        if (!commandObj) throw 'Command not recognized';
-    } catch (err) {
-        console.error('Error: ' + err);
-        commandObj = ''
-    }
-
-    return commandObj;
-}
-
-function cleanseInput(input) {
-    return input;
-    // Check that is code value
-    // Check if operand that val2 and val1 aren't empty
-}
-
-
+  }
+};
