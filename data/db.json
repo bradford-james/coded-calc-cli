@@ -98,6 +98,18 @@
       "code": "CLR",
       "name": "Clear",
       "type": "clear"
+    },
+    {
+      "code": "SIGN",
+      "name": "Positive/Negative",
+      "type": "modifier",
+      "execution": "Number(val) * -1"
+    },
+    {
+      "code": "DEC",
+      "name": "Decimal",
+      "type": "modifier",
+      "execution": "val + '.'"
     }
   ]
 }

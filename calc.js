@@ -1,4 +1,5 @@
 const getCmdObj = require("./utils/getCmdObj");
+const handleOpExec = require("./utils/handleOpExecution");
 
 module.exports = class Calculator {
   constructor() {
@@ -20,7 +21,7 @@ module.exports = class Calculator {
   async handleInput(receivedInput) {
     var cmdObj = await getCmdObj(receivedInput);
 
-    // eqMem is presenved for sequential Equals operations
+    // eqMem, eqOpMem is preserved for sequential Equals operations
     if (cmdObj["code"] != "EQ") {
       this.eqMem = "";
       this.eqOpMem = "";
@@ -42,7 +43,12 @@ module.exports = class Calculator {
       case "op_continue":
         if (!this.val1) return "NON_ALLOWABLE";
         if (this.val2 != "") {
-          this.val1 = this.operation(this.val1, this.val2).toString();
+          this.val1 = handleOpExec(
+            this.val1,
+            this.val2,
+            this.operand,
+            this.operation
+          ).toString();
           this.val2 = "";
         }
         this.operand = cmdObj["code"];
@@ -58,13 +64,24 @@ module.exports = class Calculator {
         if (cmdObj["code"] == "EQ") {
           if (!this.val2) this.val2 = this.eqMem;
           if (!this.operation) this.operation = this.eqOpMem;
-          this.val1 = this.operation(this.val1, this.val2).toString();
-          this.eqMem = this.val2;
-          this.eqOpMem = this.operation;
+          let result;
+          try {
+            result = handleOpExec(
+              this.val1,
+              this.val2,
+              this.operand,
+              this.operation
+            ).toString();
+            this.val1 = result;
+            this.eqMem = this.val2;
+            this.eqOpMem = this.operation;
+            this.val2 = "";
+            this.operand = "equals";
+            this.operation = "";
+          } catch (err) {
+            console.log(err);
+          }
         }
-        this.val2 = "";
-        this.operand = "equals";
-        this.operation = "";
         break;
 
       case "clear":
@@ -86,6 +103,14 @@ module.exports = class Calculator {
             this.operation = "";
           }
         }
+        break;
+
+      case "modifier":
+        break;
+
+      case "error":
+        const errMessage = cmdObj["name"];
+        console.log(errMessage);
         break;
 
       default:

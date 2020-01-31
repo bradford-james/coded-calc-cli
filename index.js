@@ -11,7 +11,7 @@ function main() {
   console.log("-------------");
   console.log("|     " + CalcInst.display + "     |");
   console.log("-------------");
-  readline.question("Enter command: ", async receivedInput => {
+  readline.question("Enter Command: ", async receivedInput => {
     if (receivedInput == "EXT") process.exit(0);
     if (
       receivedInput == "HELP" ||
