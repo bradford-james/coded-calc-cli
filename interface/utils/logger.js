@@ -42,7 +42,7 @@ const logStartSession = () => {
 
 const logEndSession = () => {
   const timeStamp = getTimeStamp();
-  const session = `SESSION ENDED - ${timeStamp}\n`;
+  const session = `SESSION_ENDED - ${timeStamp}\n`;
 
   access.write(session);
 

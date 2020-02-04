@@ -10,14 +10,26 @@ module.exports = class Calculator {
     this.VALUE_LENGTH_LIMIT = 100;
   }
 
-  get display() {
-    return this.resultant != ""
-      ? this.resultant
-      : this.val2 != ""
-        ? this.val2
-        : this.val1 != ""
-          ? this.val1
-          : "0";
+  getDisplay() {
+    // 'type' property of the return object can be used for handling 
+    // different display limitations on string length, upper/lower bounds, etc.
+
+    return this.resultant != "" ? {
+      type: "resultant",
+      value: this.resultant
+    }
+      : this.val2 != "" ? {
+        type: "value",
+        value: this.val2
+      }
+        : this.val1 != "" ? {
+          type: "value",
+          value: this.val1
+        }
+          : {
+            type: "value",
+            value: "0"
+          };
   }
 
   handleInput(receivedInput) {

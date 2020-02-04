@@ -21,7 +21,7 @@ TESTS
 
 describe("Init", () => {
   test("Initial Display", () => {
-    expect(CalcInst.display).toBe("0");
+    expect(CalcInst.getDisplay().value).toBe("0");
   });
 });
 
@@ -31,7 +31,7 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("THREE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("10");
+    expect(CalcInst.getDisplay()).toEqual({ type: "resultant", value: "10" });
   });
 
   test("Subtraction test", () => {
@@ -39,7 +39,7 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("SUB");
     CalcInst.handleInput("FOUR");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("-2");
+    expect(CalcInst.getDisplay().value).toBe("-2");
   });
 
   test("Multiplication test", () => {
@@ -47,7 +47,7 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("MUL");
     CalcInst.handleInput("SIX");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("48");
+    expect(CalcInst.getDisplay().value).toBe("48");
   });
 
   test("Division test", () => {
@@ -55,7 +55,7 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("DIV");
     CalcInst.handleInput("THREE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("3");
+    expect(CalcInst.getDisplay().value).toBe("3");
   });
 
   test("All Clear test", () => {
@@ -67,7 +67,7 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("THREE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("7");
+    expect(CalcInst.getDisplay().value).toBe("7");
   });
 
   test("Clear test", () => {
@@ -77,27 +77,27 @@ describe("Basic Commands", () => {
     CalcInst.handleInput("CLR");
     CalcInst.handleInput("FIVE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("14");
+    expect(CalcInst.getDisplay().value).toBe("14");
   });
 });
 
 describe("Non-Allowable/Blocked Commands", () => {
   test("Starting Operand Check", () => {
     CalcInst.handleInput("ADD");
-    expect(CalcInst.display).toBe("0");
+    expect(CalcInst.getDisplay().value).toBe("0");
   });
 
   test("Equals With No Operand", () => {
     CalcInst.handleInput("ONE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("1");
+    expect(CalcInst.getDisplay().value).toBe("1");
   });
 
   test("Equals With No Second Value", () => {
     CalcInst.handleInput("ONE");
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("1");
+    expect(CalcInst.getDisplay().value).toBe("1");
   });
 });
 
@@ -109,7 +109,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("THREE");
     CalcInst.handleInput("ONE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("43");
+    expect(CalcInst.getDisplay().value).toBe("43");
   });
 
   test("Decimal Returns", () => {
@@ -117,7 +117,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("DIV");
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("2.5");
+    expect(CalcInst.getDisplay().value).toBe("2.5");
   });
 
   test("Complex Decimal Returns", () => {
@@ -126,7 +126,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("DIV");
     CalcInst.handleInput("SEVEN");
     CalcInst.handleInput("EQ");
-    expect(Number(CalcInst.display).toFixed(6)).toBe("7.285714");
+    expect(Number(CalcInst.getDisplay().value).toFixed(6)).toBe("7.285714");
   });
 
   test("Switched Operand Entries", () => {
@@ -135,7 +135,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("7");
+    expect(CalcInst.getDisplay().value).toBe("7");
   });
 
   test("Sequential Operand Entries", () => {
@@ -147,7 +147,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("12");
+    expect(CalcInst.getDisplay().value).toBe("12");
   });
 
   test("Separate Equations", () => {
@@ -159,7 +159,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("5");
+    expect(CalcInst.getDisplay().value).toBe("5");
   });
 
   test("Sequential Equals, Increments", () => {
@@ -168,7 +168,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("8");
+    expect(CalcInst.getDisplay().value).toBe("8");
   });
 
   test("Negative Number", () => {
@@ -177,7 +177,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("-2");
+    expect(CalcInst.getDisplay().value).toBe("-2");
   });
 
   test("Both Numbers are Negative", () => {
@@ -187,7 +187,7 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("TWO");
     CalcInst.handleInput("SIGN");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("6");
+    expect(CalcInst.getDisplay().value).toBe("6");
   });
 
   test("Decimal Number", () => {
@@ -197,6 +197,6 @@ describe("Advanced Use Cases", () => {
     CalcInst.handleInput("ADD");
     CalcInst.handleInput("ONE");
     CalcInst.handleInput("EQ");
-    expect(CalcInst.display).toBe("3.1");
+    expect(CalcInst.getDisplay().value).toBe("3.1");
   });
 });
