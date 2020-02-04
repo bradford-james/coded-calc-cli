@@ -1,6 +1,6 @@
 // CLI Tool Implementation
 const chalk = require("chalk");
-const fs = require("fs");
+const { logError, logEvent, logStartSession, logEndSession } = require("./utils/logger")
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
@@ -12,12 +12,14 @@ module.exports = class CLI {
   }
 
   run() {
+    logStartSession();
     this.getDisplay();
-    let opResult;
 
+    let opResult;
     readline.question("Enter Command: ", receivedInput => {
       switch (receivedInput) {
         case "EXT":
+          logEndSession();
           process.exit(0);
 
         case "HELP":
@@ -28,20 +30,31 @@ module.exports = class CLI {
           opResult = this.calculator.handleInput(receivedInput);
           break;
       }
-      if (opResult.success === "N") this.handleError(opResult.appState, opResult.message);
+      if (opResult.success === "N") logError(opResult.appState, opResult.message)
+      logEvent(opResult.appState, opResult.message);
+
       this.run();
     });
   }
 
   getDisplay() {
     const displayVal = this.calculator.display;
+    // TODO Screen character limits
+    // If resultant, check if value is >= 1000000000 or <= 1000000000 (1 billion)
+    // Set decimal and show exponent (x10^_),
+    // If resultant, check if value is <= 0.00000001 >= -0.00000001
+    // Set decimal and show exponent (x10^-_)
+    // If other value, past 1 billion (+/-) or less than 0.00000001 (+/-)
+    // return error/block 
+
+    // If decimal, round to <= 10 characters total
 
     console.log(chalk.blue("---------------"));
     console.log("\n");
     console.log(chalk.blue("---------------"));
     console.log(
       chalk.blue("| ") +
-      this.setdisplayPadding(displayVal) +
+      this.setDisplayPadding(displayVal) +
       chalk.yellow(displayVal) +
       chalk.blue(" |")
     );
@@ -50,7 +63,7 @@ module.exports = class CLI {
     return true;
   }
 
-  setdisplayPadding(displayVal) {
+  setDisplayPadding(displayVal) {
     let padding = "";
     const displayLen = displayVal.toString().length;
     const padLen = 11 - displayLen;
@@ -58,37 +71,6 @@ module.exports = class CLI {
       padding += " ";
     }
     return padding;
-  }
-
-  handleError(state, err) {
-    const timeStamp = this.getTimeStamp();
-    state = JSON.stringify(state);
-    const errorLog = `${timeStamp} - ${err} - App State: ${state}}\n`
-
-
-    const logDir = (__dirname + "/../logs");
-    const errorFile = fs.createWriteStream(logDir + '/error.log', { flags: 'a' });
-    errorFile.write(errorLog);
-    errorFile.end();
-
-    //const access = fs.createWriteStream(logDir + '/access.log', { flags: 'a' });
-
-    console.log(chalk.red(`ERROR: \n${this.toTitleCase(err)}`));
-    return true;
-  }
-
-  getTimeStamp() {
-    return (new Date().toISOString().
-      replace(/T/, ' ').
-      replace(/\..+/, ''))
-  }
-
-  toTitleCase(str) {
-    str = str.toLowerCase().split(" ");
-    for (let i = 0; i < str.length; i++) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-    }
-    return str.join(" ");
   }
 
   showHelp() {

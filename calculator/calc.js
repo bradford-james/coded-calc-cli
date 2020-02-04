@@ -7,7 +7,7 @@ module.exports = class Calculator {
     this.val2 = "";
     this.resultant = "";
     this.state = 0;
-    this.VALUE_LENGTH_LIMIT = 10;
+    this.VALUE_LENGTH_LIMIT = 100;
   }
 
   get display() {
@@ -124,7 +124,12 @@ module.exports = class Calculator {
         success: "Y",
         message: "",
         appState: {
-          command: receivedInput
+          command: receivedInput,
+          val1: this.val1,
+          operand: this.operand,
+          val2: this.val2,
+          resultant: this.resultant,
+          state: this.state
         }
       };
     } catch (err) {
