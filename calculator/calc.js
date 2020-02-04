@@ -38,7 +38,10 @@ module.exports = class Calculator {
         } else {
           this.val2 = this.val2 + cmdObj["value"];
         }
-        break;
+        return {
+          success: "Y",
+          message: ""
+        };
 
       case "op_continue":
         if (!this.val1) return "NON_ALLOWABLE";
@@ -57,7 +60,10 @@ module.exports = class Calculator {
           "val2",
           "return " + cmdObj["execution"]
         );
-        break;
+        return {
+          success: "Y",
+          message: ""
+        };
 
       case "op_exec":
         if (!this.val1 || !this.operand) return "NON_ALLOWABLE";
@@ -82,7 +88,10 @@ module.exports = class Calculator {
             console.log(err);
           }
         }
-        break;
+        return {
+          success: "Y",
+          message: ""
+        };
 
       case "clear":
         if (cmdObj["code"] == "ALL_CLR") {
@@ -103,18 +112,31 @@ module.exports = class Calculator {
             this.operation = "";
           }
         }
-        break;
+        return {
+          success: "Y",
+          message: ""
+        };
 
       case "modifier":
-        break;
+        return {
+          success: "Y",
+          message: ""
+        };
 
       case "error":
         const errMessage = cmdObj["name"];
-        console.log(errMessage);
-        break;
+        const result = {
+          success: "N",
+          message: errMessage
+        };
+        return result;
 
       default:
-        return "ERROR";
+        result = {
+          success: "N",
+          message: "No Such Command"
+        };
+        return result;
     }
   }
 };
