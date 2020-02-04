@@ -14,10 +14,10 @@ module.exports = class Calculator {
     return this.resultant != ""
       ? this.resultant
       : this.val2 != ""
-      ? this.val2
-      : this.val1 != ""
-      ? this.val1
-      : "0";
+        ? this.val2
+        : this.val1 != ""
+          ? this.val1
+          : "0";
   }
 
   handleInput(receivedInput) {
@@ -122,12 +122,23 @@ module.exports = class Calculator {
       }
       return {
         success: "Y",
-        message: ""
+        message: "",
+        appState: {
+          command: receivedInput
+        }
       };
     } catch (err) {
       return {
         success: "N",
-        message: err
+        message: err,
+        appState: {
+          command: receivedInput,
+          val1: this.val1,
+          operand: this.operand,
+          val2: this.val2,
+          resultant: this.resultant,
+          state: this.state
+        }
       };
     }
   }

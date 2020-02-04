@@ -1,21 +1,9 @@
 // CLI Tool Implementation
 const chalk = require("chalk");
-const { createLogger, format, transports } = require("winston");
-const { combine, timestamp, label, prettyPrint } = format;
+const fs = require("fs");
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
-});
-
-const logger = createLogger({
-  format: combine(timestamp(), prettyPrint()),
-  transports: [
-    new transports.File({
-      filename: "./logs/error.log",
-      level: "error"
-    }),
-    new transports.File({ filename: "./logs/combined.log" })
-  ]
 });
 
 module.exports = class CLI {
@@ -40,7 +28,7 @@ module.exports = class CLI {
           opResult = this.calculator.handleInput(receivedInput);
           break;
       }
-      if (opResult.success === "N") this.handleError(opResult.message);
+      if (opResult.success === "N") this.handleError(opResult.appState, opResult.message);
       this.run();
     });
   }
@@ -53,9 +41,9 @@ module.exports = class CLI {
     console.log(chalk.blue("---------------"));
     console.log(
       chalk.blue("| ") +
-        this.setdisplayPadding(displayVal) +
-        chalk.yellow(displayVal) +
-        chalk.blue(" |")
+      this.setdisplayPadding(displayVal) +
+      chalk.yellow(displayVal) +
+      chalk.blue(" |")
     );
     console.log(chalk.blue("---------------"));
 
@@ -72,10 +60,27 @@ module.exports = class CLI {
     return padding;
   }
 
-  handleError(err) {
-    logger.error(err);
+  handleError(state, err) {
+    const timeStamp = this.getTimeStamp();
+    state = JSON.stringify(state);
+    const errorLog = `${timeStamp} - ${err} - App State: ${state}}\n`
+
+
+    const logDir = (__dirname + "/../logs");
+    const errorFile = fs.createWriteStream(logDir + '/error.log', { flags: 'a' });
+    errorFile.write(errorLog);
+    errorFile.end();
+
+    //const access = fs.createWriteStream(logDir + '/access.log', { flags: 'a' });
+
     console.log(chalk.red(`ERROR: \n${this.toTitleCase(err)}`));
     return true;
+  }
+
+  getTimeStamp() {
+    return (new Date().toISOString().
+      replace(/T/, ' ').
+      replace(/\..+/, ''))
   }
 
   toTitleCase(str) {
