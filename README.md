@@ -5,39 +5,43 @@
 - [x] Accept input as singles (number or operand)
 - [x] Will have an item in memory as rolling value
 - [x] Will need memory for operand
-- [ ] Need cache for cached value
-  - [ ] 5 cached values, which can be iterated through
-  - [ ] Add button, iterate, and clear
-  - [ ] What does All Clear do to cache?
 - [x] Some operaters don't require a second value
 - [x] A number must be the first input
 - [x] Sequential operands will replace each other
-- [ ] Implement Decimals
-- [ ] Prevent multiple decimals
-- [ ] Some number modifiers (+/-)
+- [x] Implement Decimals
+- [x] Prevent multiple decimals
+- [x] Some number modifiers (+/-)
 - [ ] Display limit (rounding)
 - [ ] Decimal limit (rounding)
 - [ ] Value limit (switch to exponent?)
-- [ ] Handle errors like divide by zero
-- [ ] Square root needs an imaginary number handler
+- [x] Handle errors like divide by zero
 - [x] Always show zero if nothing in memory, initialization
 - [x] Hitting enter again will repeat the operation
 - [x] Clear and all clear
+
+- [x] Add Chalk to output display
+- [ ] Finish writing tests for interface
+- [ ] Write errors to log
+- [ ] Use TravisCI
+- [ ] Publish to NPM Repo
 
 ## Folder Structure
 
 - **Coded-Calculator**
 
-  - **Interface**
-  - **Data**
-    - db.json
-  - **Utils**
-    - Error Handling
-    - Logging
-  - **Tests**
-    - test.js
+  - **interface**
+    - interface.js
+    - **Utils**
+      - errorLogging.js
+    - **Tests**
+      - test.js
+  - **calculator**
+    - calculator.js
+    - **data**
+      - dataStore.js
+    - **Tests**
+      - test.js
   - index.js
-  - calc.js
 
 ### Commands
 
@@ -53,5 +57,10 @@ Clear Buttons
 Operand Buttons
 
 - **ADD**, **SUB**, **MUL**, **DIV**
+
+Other Buttons
+
+- **DEC** - adds a decimal to the current value
+- **SIGN** - flips the sign of the current value
 
 **Read the test cases for more information on application functionality**

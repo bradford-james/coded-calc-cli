@@ -118,7 +118,7 @@ module.exports = class Calculator {
           break;
 
         default:
-          return "ERROR: COMMAND NOT ALLOWABLE";
+          throw "COMMAND NOT ALLOWABLE";
       }
       return {
         success: "Y",
@@ -170,7 +170,7 @@ module.exports = class Calculator {
 
   getCmd(inputCode) {
     const cmdObj = ds.commands.find(obj => obj.code === inputCode);
-    if (!cmdObj) throw "ERROR: COMMAND NOT RECOGNIZED";
+    if (!cmdObj) throw "COMMAND NOT RECOGNIZED";
 
     return cmdObj;
   }
@@ -185,8 +185,6 @@ module.exports = class Calculator {
 
     return val.concat(appendee);
   }
-
-  saveOperand() {}
 
   executeOperation() {
     if (this.operand === "/" && this.val2 == "0") throw "DIVIDE BY ZERO";
