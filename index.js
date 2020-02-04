@@ -3,4 +3,5 @@ const Interface = require("./interface/interface");
 
 const CalcInst = new Calculator();
 const InterfaceInst = new Interface(CalcInst);
+
 InterfaceInst.run();

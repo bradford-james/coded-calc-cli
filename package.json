@@ -14,9 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "lowdb": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^6.8.0"
   }

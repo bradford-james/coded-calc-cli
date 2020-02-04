@@ -1,142 +1,234 @@
-const getCmdObj = require("./utils/getCmdObj");
-const handleOpExec = require("./utils/handleOpExecution");
+const ds = require("./data/dataStore");
 
 module.exports = class Calculator {
   constructor() {
-    (this.val1 = ""),
-      (this.val2 = ""),
-      (this.eqMem = ""),
-      (this.eqOpMem = ""),
-      (this.operand = ""),
-      (this.operation = ""),
-      (this.memCache = []);
+    this.val1 = "";
+    this.operand = "";
+    this.val2 = "";
+    this.resultant = "";
+    this.state = 0;
+    this.VALUE_LENGTH_LIMIT = 10;
   }
 
   get display() {
-    return Number(
-      this.val2 != "" ? this.val2 : this.val1 != "" ? this.val1 : 0
-    );
+    return this.resultant != ""
+      ? this.resultant
+      : this.val2 != ""
+      ? this.val2
+      : this.val1 != ""
+      ? this.val1
+      : "0";
   }
 
-  async handleInput(receivedInput) {
-    var cmdObj = await getCmdObj(receivedInput);
+  handleInput(receivedInput) {
+    try {
+      this.state = this.determineState();
+      const cmd = this.getCmd(receivedInput);
 
-    // eqMem, eqOpMem is preserved for sequential Equals operations
-    if (cmdObj["code"] != "EQ") {
-      this.eqMem = "";
-      this.eqOpMem = "";
-    }
+      switch (true) {
+        // ------------------------
+        // STATE 0 - Initial State
+        //------------------------
+        case this.state === 0 && cmd.type == "NUM":
+          this.val1 = this.appendNumber(this.val1, cmd.value);
+          break;
 
-    switch (cmdObj["type"]) {
-      case "numeric":
-        if (this.operand == "equals") {
-          this.val1 = "";
-          this.operand = "";
-        }
-        if (!this.operand) {
-          this.val1 = this.val1 + cmdObj["value"];
-        } else {
-          this.val2 = this.val2 + cmdObj["value"];
-        }
-        return {
-          success: "Y",
-          message: ""
-        };
+        // --------------------------------------
+        // STATE 1 - One number has been entered
+        //--------------------------------------
+        case this.state === 1 && cmd.type == "NUM":
+          this.val1 = this.appendNumber(this.val1, cmd.value);
+          break;
 
-      case "op_continue":
-        if (!this.val1) return "NON_ALLOWABLE";
-        if (this.val2 != "") {
-          this.val1 = handleOpExec(
-            this.val1,
-            this.val2,
-            this.operand,
-            this.operation
-          ).toString();
+        case this.state === 1 && cmd.type == "OP_CONT":
+          this.operand = cmd.value;
+          break;
+
+        case this.state === 1 && cmd.type == "OP_EXEC":
+          // To be used by squared, square root, absolute value, etc
+          break;
+
+        case this.state === 1 && cmd.type == "DEC":
+          this.val1 = this.appendDecimal(this.val1);
+          break;
+
+        case this.state === 1 && cmd.type == "SIGN":
+          this.val1 = this.invertSign(this.val1);
+          break;
+
+        // ----------------------------------------------------
+        // STATE 2 - A number and an operand have been entered
+        //----------------------------------------------------
+        case this.state === 2 && cmd.type == "NUM":
+          this.val2 = this.appendNumber(this.val2, cmd.value);
+          break;
+
+        case this.state === 2 && cmd.type == "OP_CONT":
+          this.operand = cmd.value;
+          break;
+
+        // -------------------------------------------------------
+        // STATE 3 - Two numbers and an operand have been entered
+        //-------------------------------------------------------
+        case this.state === 3 && cmd.type == "NUM":
+          this.val2 = this.appendNumber(this.val2, cmd.value);
+          break;
+
+        case this.state === 3 && cmd.type == "OP_CONT":
+          this.val1 = this.executeOperation();
+          this.operand = cmd.value;
           this.val2 = "";
-        }
-        this.operand = cmdObj["code"];
-        this.operation = new Function(
-          "val1",
-          "val2",
-          "return " + cmdObj["execution"]
-        );
-        return {
-          success: "Y",
-          message: ""
-        };
+          break;
 
-      case "op_exec":
-        if (!this.val1 || !this.operand) return "NON_ALLOWABLE";
-        if (cmdObj["code"] == "EQ") {
-          if (!this.val2) this.val2 = this.eqMem;
-          if (!this.operation) this.operation = this.eqOpMem;
-          let result;
-          try {
-            result = handleOpExec(
-              this.val1,
-              this.val2,
-              this.operand,
-              this.operation
-            ).toString();
-            this.val1 = result;
-            this.eqMem = this.val2;
-            this.eqOpMem = this.operation;
-            this.val2 = "";
-            this.operand = "equals";
-            this.operation = "";
-          } catch (err) {
-            console.log(err);
-          }
-        }
-        return {
-          success: "Y",
-          message: ""
-        };
+        case this.state === 3 && cmd.type == "OP_EXEC":
+          if (cmd.code == "EQ") this.resultant = this.executeOperation();
+          break;
 
-      case "clear":
-        if (cmdObj["code"] == "ALL_CLR") {
+        case this.state === 3 && cmd.type == "DEC":
+          this.val2 = this.appendDecimal(this.val2);
+          break;
+
+        case this.state === 3 && cmd.type == "SIGN":
+          this.val2 = this.invertSign(this.val2);
+          break;
+
+        // ------------------------------------------------------------
+        // STATE 4 - An equation has been executed and returned a result
+        //------------------------------------------------------------
+        case this.state === 4 && cmd.type == "NUM":
+          this.clearState();
+          this.val1 = this.appendNumber(this.val1, cmd.value);
+          break;
+
+        case this.state === 4 && cmd.type == "OP_EXEC":
+          this.val1 = this.resultant;
+          this.resultant = this.executeOperation();
+          break;
+
+        case this.state === 4 && cmd.type == "SIGN":
+          this.resultant = this.invertSign(this.resultant);
+          break;
+
+        case this.state === 3 && cmd.code == "CLR":
           this.val2 = "";
-          this.val1 = "";
-          this.eqMem = "";
-          this.eqOpMem = "";
-          this.operand = "";
-          this.operation = "";
-        } else if (cmdObj["code"] == "CLR") {
-          if (this.val2 != "") {
-            this.val2 = "";
-          } else {
-            this.val1 = "";
-            this.eqMem = "";
-            this.eqOpMem = "";
-            this.operand = "";
-            this.operation = "";
-          }
-        }
-        return {
-          success: "Y",
-          message: ""
-        };
+          break;
 
-      case "modifier":
-        return {
-          success: "Y",
-          message: ""
-        };
+        case cmd.type == "CLR":
+          this.clearState();
+          break;
 
-      case "error":
-        const errMessage = cmdObj["name"];
-        const result = {
-          success: "N",
-          message: errMessage
-        };
-        return result;
-
-      default:
-        result = {
-          success: "N",
-          message: "No Such Command"
-        };
-        return result;
+        default:
+          return "ERROR: COMMAND NOT ALLOWABLE";
+      }
+      return {
+        success: "Y",
+        message: ""
+      };
+    } catch (err) {
+      return {
+        success: "N",
+        message: err
+      };
     }
+  }
+
+  determineState() {
+    if (!this.val1 && !this.operand && !this.val2 && !this.resultant) {
+      return 0;
+    } else if (
+      this.val1 != "" &&
+      !this.operand &&
+      !this.val2 &&
+      !this.resultant
+    ) {
+      return 1;
+    } else if (
+      this.val1 != "" &&
+      this.operand != "" &&
+      !this.val2 &&
+      !this.resultant
+    ) {
+      return 2;
+    } else if (
+      this.val1 != "" &&
+      this.operand != "" &&
+      this.val2 != "" &&
+      !this.resultant
+    ) {
+      return 3;
+    } else if (
+      this.val1 != "" &&
+      this.operand != "" &&
+      this.val2 != "" &&
+      this.resultant != ""
+    ) {
+      return 4;
+    } else {
+      throw "INVALID STATE";
+    }
+  }
+
+  getCmd(inputCode) {
+    const cmdObj = ds.commands.find(obj => obj.code === inputCode);
+    if (!cmdObj) throw "ERROR: COMMAND NOT RECOGNIZED";
+
+    return cmdObj;
+  }
+
+  appendNumber(val, appendee) {
+    val = val.toString();
+    appendee = appendee.toString();
+
+    if (val.length >= this.VALUE_LENGTH_LIMIT)
+      throw "LENGTH GREATER THAN ALLOWABLE";
+    if (val === "" || val === 0) return appendee;
+
+    return val.concat(appendee);
+  }
+
+  saveOperand() {}
+
+  executeOperation() {
+    if (this.operand === "/" && this.val2 == "0") throw "DIVIDE BY ZERO";
+
+    const value_1 = Number(this.val1);
+    const value_2 = Number(this.val2);
+    const operation = new Function(
+      "value_1",
+      "value_2",
+      `return value_1 ${this.operand} value_2`
+    );
+
+    const result = operation(value_1, value_2);
+    return result.toString();
+  }
+
+  appendDecimal(val) {
+    val = val.toString();
+
+    const decimalCount = (val.match(/[0-9]\./g) || []).length;
+    if (decimalCount >= 1) throw "ALREADY HAS DECIMAL";
+    if (val.length >= this.VALUE_LENGTH_LIMIT)
+      throw "LENGTH GREATER THAN ALLOWABLE";
+
+    return val.concat(".");
+  }
+
+  invertSign(val) {
+    val = Number(val);
+    if (val === "" || val == 0) return val;
+
+    const invertedVal = (val * -1).toString();
+    return invertedVal;
+  }
+
+  clearState() {
+    this.val1 = "";
+    this.operand = "";
+    this.val2 = "";
+    this.resultant = "";
+    this.state = 0;
+
+    return true;
   }
 };

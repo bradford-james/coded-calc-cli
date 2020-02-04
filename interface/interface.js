@@ -11,11 +11,11 @@ module.exports = class CLI {
   }
 
   run(prevState = {}) {
-    if (prevState.success == "N") this.err = prevState.message;
+    if (prevState.success === "N") this.err = prevState.message;
     if (this.err != "") this.showError(this.err);
     this.getDisplay();
 
-    readline.question("Enter command: ", async receivedInput => {
+    readline.question("Enter command: ", receivedInput => {
       let operationResult;
 
       switch (receivedInput) {
@@ -27,7 +27,7 @@ module.exports = class CLI {
           break;
 
         default:
-          operationResult = await this.calculator.handleInput(receivedInput);
+          operationResult = this.calculator.handleInput(receivedInput);
           break;
       }
       this.run(operationResult);
