@@ -24,6 +24,7 @@
 - [ ] Write errors to log
 - [ ] Use TravisCI
 - [ ] Publish to NPM Repo
+- [ ]
 
 ## Folder Structure
 
