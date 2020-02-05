@@ -1,4 +1,18 @@
-const ds = require("./data/dataStore");
+// --------
+// IMPORTS
+//--------
+
+const {
+  getCmd,
+  handleError,
+  appendNumber,
+  invertSign,
+  appendDecimal
+} = require("./utils/functions");
+
+// ----------
+// CLASS DEF
+//----------
 
 module.exports = class Calculator {
   constructor() {
@@ -11,45 +25,48 @@ module.exports = class Calculator {
   }
 
   getDisplay() {
-    // 'type' property of the return object can be used for handling 
+    // 'type' property of the return object can be used for handling
     // different display limitations on string length, upper/lower bounds, etc.
 
-    return this.resultant != "" ? {
-      type: "resultant",
-      value: this.resultant
-    }
-      : this.val2 != "" ? {
-        type: "value",
-        value: this.val2
-      }
-        : this.val1 != "" ? {
+    return this.resultant != ""
+      ? {
+          type: "resultant",
+          value: this.resultant
+        }
+      : this.val2 != ""
+      ? {
+          type: "value",
+          value: this.val2
+        }
+      : this.val1 != ""
+      ? {
           type: "value",
           value: this.val1
         }
-          : {
-            type: "value",
-            value: "0"
-          };
+      : {
+          type: "value",
+          value: "0"
+        };
   }
 
   handleInput(receivedInput) {
     try {
-      this.state = this.determineState();
-      const cmd = this.getCmd(receivedInput);
+      this.state = this._determineState();
+      const cmd = getCmd(receivedInput);
 
       switch (true) {
         // ------------------------
         // STATE 0 - Initial State
         //------------------------
         case this.state === 0 && cmd.type == "NUM":
-          this.val1 = this.appendNumber(this.val1, cmd.value);
+          this.val1 = appendNumber(this.val1, cmd.value);
           break;
 
         // --------------------------------------
         // STATE 1 - One number has been entered
         //--------------------------------------
         case this.state === 1 && cmd.type == "NUM":
-          this.val1 = this.appendNumber(this.val1, cmd.value);
+          this.val1 = appendNumber(this.val1, cmd.value);
           break;
 
         case this.state === 1 && cmd.type == "OP_CONT":
@@ -61,18 +78,18 @@ module.exports = class Calculator {
           break;
 
         case this.state === 1 && cmd.type == "DEC":
-          this.val1 = this.appendDecimal(this.val1);
+          this.val1 = appendDecimal(this.val1);
           break;
 
         case this.state === 1 && cmd.type == "SIGN":
-          this.val1 = this.invertSign(this.val1);
+          this.val1 = invertSign(this.val1);
           break;
 
         // ----------------------------------------------------
         // STATE 2 - A number and an operand have been entered
         //----------------------------------------------------
         case this.state === 2 && cmd.type == "NUM":
-          this.val2 = this.appendNumber(this.val2, cmd.value);
+          this.val2 = appendNumber(this.val2, cmd.value);
           break;
 
         case this.state === 2 && cmd.type == "OP_CONT":
@@ -83,42 +100,42 @@ module.exports = class Calculator {
         // STATE 3 - Two numbers and an operand have been entered
         //-------------------------------------------------------
         case this.state === 3 && cmd.type == "NUM":
-          this.val2 = this.appendNumber(this.val2, cmd.value);
+          this.val2 = appendNumber(this.val2, cmd.value);
           break;
 
         case this.state === 3 && cmd.type == "OP_CONT":
-          this.val1 = this.executeOperation();
+          this.val1 = this._executeOperation();
           this.operand = cmd.value;
           this.val2 = "";
           break;
 
         case this.state === 3 && cmd.type == "OP_EXEC":
-          if (cmd.code == "EQ") this.resultant = this.executeOperation();
+          if (cmd.code == "EQ") this.resultant = this._executeOperation();
           break;
 
         case this.state === 3 && cmd.type == "DEC":
-          this.val2 = this.appendDecimal(this.val2);
+          this.val2 = appendDecimal(this.val2);
           break;
 
         case this.state === 3 && cmd.type == "SIGN":
-          this.val2 = this.invertSign(this.val2);
+          this.val2 = invertSign(this.val2);
           break;
 
         // ------------------------------------------------------------
         // STATE 4 - An equation has been executed and returned a result
         //------------------------------------------------------------
         case this.state === 4 && cmd.type == "NUM":
-          this.clearState();
-          this.val1 = this.appendNumber(this.val1, cmd.value);
+          this._clearState();
+          this.val1 = appendNumber(this.val1, cmd.value);
           break;
 
         case this.state === 4 && cmd.type == "OP_EXEC":
           this.val1 = this.resultant;
-          this.resultant = this.executeOperation();
+          this.resultant = this._executeOperation();
           break;
 
         case this.state === 4 && cmd.type == "SIGN":
-          this.resultant = this.invertSign(this.resultant);
+          this.resultant = invertSign(this.resultant);
           break;
 
         case this.state === 3 && cmd.code == "CLR":
@@ -126,41 +143,19 @@ module.exports = class Calculator {
           break;
 
         case cmd.type == "CLR":
-          this.clearState();
+          this._clearState();
           break;
 
         default:
-          throw "COMMAND NOT ALLOWABLE";
+          handleError("NON_ALLOW");
       }
-      return {
-        success: "Y",
-        message: "",
-        appState: {
-          command: receivedInput,
-          val1: this.val1,
-          operand: this.operand,
-          val2: this.val2,
-          resultant: this.resultant,
-          state: this.state
-        }
-      };
+      return this._setReturn(receivedInput);
     } catch (err) {
-      return {
-        success: "N",
-        message: err,
-        appState: {
-          command: receivedInput,
-          val1: this.val1,
-          operand: this.operand,
-          val2: this.val2,
-          resultant: this.resultant,
-          state: this.state
-        }
-      };
+      return this._setReturn(receivedInput, err);
     }
   }
 
-  determineState() {
+  _determineState() {
     if (!this.val1 && !this.operand && !this.val2 && !this.resultant) {
       return 0;
     } else if (
@@ -192,30 +187,22 @@ module.exports = class Calculator {
     ) {
       return 4;
     } else {
-      throw "INVALID STATE";
+      handleError("INV_STATE");
     }
   }
 
-  getCmd(inputCode) {
-    const cmdObj = ds.commands.find(obj => obj.code === inputCode);
-    if (!cmdObj) throw "COMMAND NOT RECOGNIZED";
+  _clearState() {
+    this.val1 = "";
+    this.operand = "";
+    this.val2 = "";
+    this.resultant = "";
+    this.state = 0;
 
-    return cmdObj;
+    return true;
   }
 
-  appendNumber(val, appendee) {
-    val = val.toString();
-    appendee = appendee.toString();
-
-    if (val.length >= this.VALUE_LENGTH_LIMIT)
-      throw "LENGTH GREATER THAN ALLOWABLE";
-    if (val === "" || val === 0) return appendee;
-
-    return val.concat(appendee);
-  }
-
-  executeOperation() {
-    if (this.operand === "/" && this.val2 == "0") throw "DIVIDE BY ZERO";
+  _executeOperation() {
+    if (this.operand === "/" && this.val2 == "0") handleError("DIV_ZERO");
 
     const value_1 = Number(this.val1);
     const value_2 = Number(this.val2);
@@ -229,32 +216,20 @@ module.exports = class Calculator {
     return result.toString();
   }
 
-  appendDecimal(val) {
-    val = val.toString();
+  _setReturn(inputCmd, err = "") {
+    const success = !err ? "Y" : "N";
 
-    const decimalCount = (val.match(/[0-9]\./g) || []).length;
-    if (decimalCount >= 1) throw "ALREADY HAS DECIMAL";
-    if (val.length >= this.VALUE_LENGTH_LIMIT)
-      throw "LENGTH GREATER THAN ALLOWABLE";
-
-    return val.concat(".");
-  }
-
-  invertSign(val) {
-    val = Number(val);
-    if (val === "" || val == 0) return val;
-
-    const invertedVal = (val * -1).toString();
-    return invertedVal;
-  }
-
-  clearState() {
-    this.val1 = "";
-    this.operand = "";
-    this.val2 = "";
-    this.resultant = "";
-    this.state = 0;
-
-    return true;
+    return {
+      success: success,
+      message: err,
+      appState: {
+        command: inputCmd,
+        val1: this.val1,
+        operand: this.operand,
+        val2: this.val2,
+        resultant: this.resultant,
+        state: this.state
+      }
+    };
   }
 };

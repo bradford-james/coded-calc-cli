@@ -1,10 +1,27 @@
-// CLI Tool Implementation
+// --------
+// IMPORTS
+//--------
+
 const chalk = require("chalk");
-const { logError, logEvent, logStartSession, logEndSession } = require("./utils/logger")
+const {
+  logError,
+  logEvent,
+  logStartSession,
+  logEndSession
+} = require("./utils/logger");
+const {
+  displayValueValidation,
+  setDisplayPadding,
+  toTitleCase
+} = require("./utils/functions");
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
 });
+
+// ---------
+//CLASS DEF
+//---------
 
 module.exports = class CLI {
   constructor(calculator) {
@@ -13,7 +30,7 @@ module.exports = class CLI {
 
   run() {
     logStartSession();
-    this.getDisplay();
+    this._getDisplay();
 
     let opResult;
     readline.question("Enter Command: ", receivedInput => {
@@ -23,95 +40,52 @@ module.exports = class CLI {
           process.exit(0);
 
         case "HELP":
-          opResult = this.showHelp();
+          opResult = this._showHelp();
           break;
 
         default:
           opResult = this.calculator.handleInput(receivedInput);
           break;
       }
-      if (opResult.success === "N") logError(opResult.appState, opResult.message)
+      if (opResult.success === "N") {
+        logError(opResult.appState, opResult.message);
+        this._showError(opResult.message);
+      }
       logEvent(opResult.appState, opResult.message);
 
       this.run();
     });
   }
 
-  getDisplay() {
+  _getDisplay() {
     const displayValueObj = this.calculator.getDisplay();
-    const validatedDisplayValueObj = this.displayValueValidation(displayValueObj);
+    const validatedDisplayValueObj = displayValueValidation(displayValueObj);
 
-    const { valSign, formattedVal, exponent } = validatedDisplayValueObj
-    const displayVal = valSign.concat(formattedVal)
+    const { valSign, formattedVal, exponent } = validatedDisplayValueObj;
+    const displayVal = valSign.concat(formattedVal);
 
     console.log(chalk.blue("---------------"));
     console.log("\n");
     console.log(chalk.blue("---------------"));
     console.log(
       chalk.blue("| ") +
-      this.setDisplayPadding(displayVal) +
-      chalk.yellow(displayVal) +
-      chalk.blue(" |") +
-      (exponent !== "" && exponent !== "1" && exponent !== "0" ? ` *10^${exponent}` : "")
+        setDisplayPadding(displayVal) +
+        chalk.yellow(displayVal) +
+        chalk.blue(" |") +
+        (exponent !== "" && exponent !== "1" && exponent !== "0"
+          ? ` *10^${exponent}`
+          : "")
     );
     console.log(chalk.blue("---------------"));
 
     return true;
   }
 
-  displayValueValidation(valObj) {
-    const { type, value } = valObj;
-    const val = value;
-    const valNum = Number(val);
-    const valSign = val.startsWith("-") ? "-" : "";
-    const valAbs = Math.abs(valNum);
-    const formattedVal = val;
-    const exp = "";
-
-    // TODO Screen character limits
-    if (type == "resultant") {
-      if (valNum >= 10000000000 || valNum <= -10000000000) { } // Set decimal and show exponent (x10^_)
-      if (valNum < 0.00000001 && valNum > -0.00000001) { } // Set decimal and show exponent (x10^-_)
-    } else {
-      if (valNum >= 1000000000 || valNum <= -1000000000 || (valNum < 0.00000001 && valNum > -0.00000001)) {
-        // return error/block
-      }
-    }
-    /*
-        if (this.hasDecimal(val) === true) {
-          // round to <= 10 characters total
-          const valAbsLength = valAbs.toString().length;
-          if (valAbsLength > 10) {
-            const excessLength = valAbsLength - 10;
-            const adjustedForRounding = valNum * (10 ^ (excessLength * -1));
-            const roundedVal = Math.round(adjustedForRounding);
-            formattedVal = "";
-          }
-        }*/
-    return {
-      valSign: valSign,
-      origVal: val,
-      formattedVal: formattedVal,
-      exponent: exp
-    }
+  _showError(err) {
+    console.log(chalk.red(`ERROR: \n${toTitleCase(err)}`));
   }
 
-  hasDecimal(val) {
-    const decimalCount = (val.match(/[0-9]\./g) || []).length;
-    if (decimalCount >= 1) return true;
-  }
-
-  setDisplayPadding(displayVal) {
-    let padding = "";
-    const displayLen = displayVal.toString().length;
-    const padLen = 11 - displayLen;
-    for (let i = 0; i < padLen; i++) {
-      padding += " ";
-    }
-    return padding;
-  }
-
-  showHelp() {
+  _showHelp() {
     const g = chalk.gray;
     const b = chalk.blue;
     const row = "-------------------------";
