@@ -20,11 +20,17 @@
 - [x] Clear and all clear
 
 - [x] Add Chalk to output display
-- [ ] Finish writing tests for interface
-- [ ] Write errors to log
-- [ ] Use TravisCI
+- [ ] Finish writing tests
+- [x] Write errors to log
 - [ ] Publish to NPM Repo
-- [ ]
+- [ ] Utility scripts for display last session to CLI, clearing logs, etc
+- [ ] git hook for updating NPM version number with git tag versioning
+- [ ] git hook script to always check test when committing
+- [ ] git hook script to test, commit, version, push, push tags
+- [ ] create utility functions files for both
+- [ ] further seperate DAL from calculator?
+- [ ] error code, lookup messaging
+- [ ] denote private functions, values of classes w/ "\_"
 
 ## Folder Structure
 
@@ -40,7 +46,7 @@
     - calculator.js
     - **data**
       - dataStore.js
-    - **Tests**
+    - **tests**
       - test.js
   - index.js
 

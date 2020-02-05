@@ -7,17 +7,29 @@ module.exports = class Calculator {
     this.val2 = "";
     this.resultant = "";
     this.state = 0;
-    this.VALUE_LENGTH_LIMIT = 10;
+    this.VALUE_LENGTH_LIMIT = 100;
   }
 
-  get display() {
-    return this.resultant != ""
-      ? this.resultant
-      : this.val2 != ""
-      ? this.val2
-      : this.val1 != ""
-      ? this.val1
-      : "0";
+  getDisplay() {
+    // 'type' property of the return object can be used for handling 
+    // different display limitations on string length, upper/lower bounds, etc.
+
+    return this.resultant != "" ? {
+      type: "resultant",
+      value: this.resultant
+    }
+      : this.val2 != "" ? {
+        type: "value",
+        value: this.val2
+      }
+        : this.val1 != "" ? {
+          type: "value",
+          value: this.val1
+        }
+          : {
+            type: "value",
+            value: "0"
+          };
   }
 
   handleInput(receivedInput) {
@@ -122,12 +134,28 @@ module.exports = class Calculator {
       }
       return {
         success: "Y",
-        message: ""
+        message: "",
+        appState: {
+          command: receivedInput,
+          val1: this.val1,
+          operand: this.operand,
+          val2: this.val2,
+          resultant: this.resultant,
+          state: this.state
+        }
       };
     } catch (err) {
       return {
         success: "N",
-        message: err
+        message: err,
+        appState: {
+          command: receivedInput,
+          val1: this.val1,
+          operand: this.operand,
+          val2: this.val2,
+          resultant: this.resultant,
+          state: this.state
+        }
       };
     }
   }
