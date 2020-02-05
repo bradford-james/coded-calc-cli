@@ -26,11 +26,12 @@
 - [ ] Utility scripts for display last session to CLI, clearing logs, etc
 - [x] git hook for updating NPM version number with git tag versioning
 - [x] git hook script to always check test when committing
-- [ ] git hook script to test, commit, version, push, push tags
+- [x] git hook script to test, commit, version, push, push tags
 - [x] create utility functions files for both
 - [x] further seperate DAL from calculator?
 - [x] error code, lookup messaging
 - [x] denote private functions, values of classes w/ "\_"
+- [x] complete the Changelog.md
 
 ## Folder Structure
 

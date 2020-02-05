@@ -20,8 +20,8 @@ const logEvent = (state, err) => {
   const timeStamp = getTimeStamp();
   state = JSON.stringify(state);
   const log = `${timeStamp} ${
-    !err ? "" : "- ERROR: " + err + " "
-  }- App State: ${state}}\n`;
+    !err ? "INFO" : "- ERROR: " + err + " "
+    }- App State: ${state}}\n`;
 
   access.write(log);
 
