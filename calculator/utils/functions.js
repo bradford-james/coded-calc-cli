@@ -9,7 +9,7 @@ const getCmd = inputCode => {
 
 const handleError = errCode => {
   const errMessage = getErrorDAL(errCode);
-  throw errMessage;
+  throw errMessage || "ERROR CODE NOT FOUND";
 };
 
 const appendNumber = (val, appendee, limit = 100) => {
