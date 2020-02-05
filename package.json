@@ -1,26 +1,12 @@
 {
-  "name": "calculator",
-  "version": "2.0.1",
-  "description": "",
+  "name": "coded-calculator",
+  "version": "2.1.2",
+  "description": "Single input calculator, similar to a simple handheld model, implemented as a CLI tool.",
   "main": "index.js",
+  "author": "bradford-james",
+  "license": "ISC",
   "directories": {
     "test": "tests"
-  },
-  "scripts": {
-    "test": "jest",
-    "start": "node bin/coded-calc.js",
-    "lint": "eslint .",
-    "commit": "git cz",
-    "release": "standard-version"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "prepare-commit-msg": "",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "post-commit": "",
-      "pre-push": "npm test"
-    }
   },
   "keywords": [],
   "readme": "README.md",
@@ -31,8 +17,30 @@
     "type": "git",
     "url": "git+https://github.com/bradford-james/Coded-Calculator.git"
   },
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "start": "node bin/coded-calc.js",
+    "test": "jest",
+    "format": "npm run prettier -- --write",
+    "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json)\"",
+    "lint": "eslint .",
+    "commit": "npm run format && npm run lint && git add . && git cz",
+    "release": "standard-version",
+    "publish-release": "npm run release && git push --follow-tags && npm publish"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "prepare-commit-msg": "",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "post-commit": "",
+      "pre-push": "npm test"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "chalk": "^3.0.0",
     "minimist": "^1.2.0"
@@ -44,10 +52,5 @@
     "eslint": "^6.8.0",
     "husky": "^4.2.1",
     "standard-version": "^7.1.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
