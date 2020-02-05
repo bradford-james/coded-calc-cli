@@ -5,10 +5,4 @@ const getCmdDAL = inputCode => {
   return cmdObj;
 };
 
-const getErrorDAL = errCode => {
-  const errObj = ds.errors.find(obj => obj.code === errCode);
-  return errObj.message;
-};
-
 exports.getCmdDAL = getCmdDAL;
-exports.getErrorDAL = getErrorDAL;

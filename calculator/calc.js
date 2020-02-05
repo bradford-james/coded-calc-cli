@@ -30,23 +30,23 @@ module.exports = class Calculator {
 
     return this.resultant != ""
       ? {
-          type: "resultant",
-          value: this.resultant
-        }
+        type: "resultant",
+        value: this.resultant
+      }
       : this.val2 != ""
-      ? {
+        ? {
           type: "value",
           value: this.val2
         }
-      : this.val1 != ""
-      ? {
-          type: "value",
-          value: this.val1
-        }
-      : {
-          type: "value",
-          value: "0"
-        };
+        : this.val1 != ""
+          ? {
+            type: "value",
+            value: this.val1
+          }
+          : {
+            type: "value",
+            value: "0"
+          };
   }
 
   handleInput(receivedInput) {
@@ -221,7 +221,7 @@ module.exports = class Calculator {
 
     return {
       success: success,
-      message: err,
+      code: err,
       appState: {
         command: inputCmd,
         val1: this.val1,

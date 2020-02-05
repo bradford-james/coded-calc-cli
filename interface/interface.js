@@ -12,7 +12,8 @@ const {
 const {
   displayValueValidation,
   setDisplayPadding,
-  toTitleCase
+  toTitleCase,
+  handleError
 } = require("./utils/functions");
 const readline = require("readline").createInterface({
   input: process.stdin,
@@ -48,10 +49,10 @@ module.exports = class CLI {
           break;
       }
       if (opResult.success === "N") {
-        logError(opResult.appState, opResult.message);
-        this._showError(opResult.message);
+        logError(opResult.appState, opResult.code);
+        this._showError(opResult.code);
       }
-      logEvent(opResult.appState, opResult.message);
+      logEvent(opResult.appState, opResult.code);
 
       this.run();
     });
@@ -69,20 +70,21 @@ module.exports = class CLI {
     console.log(chalk.blue("---------------"));
     console.log(
       chalk.blue("| ") +
-        setDisplayPadding(displayVal) +
-        chalk.yellow(displayVal) +
-        chalk.blue(" |") +
-        (exponent !== "" && exponent !== "1" && exponent !== "0"
-          ? ` *10^${exponent}`
-          : "")
+      setDisplayPadding(displayVal) +
+      chalk.yellow(displayVal) +
+      chalk.blue(" |") +
+      (exponent !== "" && exponent !== "1" && exponent !== "0"
+        ? ` *10^${exponent}`
+        : "")
     );
     console.log(chalk.blue("---------------"));
 
     return true;
   }
 
-  _showError(err) {
-    console.log(chalk.red(`ERROR: \n${toTitleCase(err)}`));
+  _showError(errCode) {
+    const errMessage = handleError(errCode);
+    console.log(chalk.red(`ERROR: \n${toTitleCase(errMessage)}`));
   }
 
   _showHelp() {

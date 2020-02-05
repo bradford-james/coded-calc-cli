@@ -1,4 +1,4 @@
-const { getCmdDAL, getErrorDAL } = require("./DAL");
+const { getCmdDAL } = require("./DAL");
 
 const getCmd = inputCode => {
   const cmdObj = getCmdDAL(inputCode);
@@ -8,8 +8,7 @@ const getCmd = inputCode => {
 };
 
 const handleError = errCode => {
-  const errMessage = getErrorDAL(errCode);
-  throw errMessage || "ERROR CODE NOT FOUND";
+  throw errCode;
 };
 
 const appendNumber = (val, appendee, limit = 100) => {

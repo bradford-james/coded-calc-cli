@@ -1,3 +1,5 @@
+const { getErrorDAL } = require("./DAL");
+
 const displayValueValidation = valObj => {
   const { type, value } = valObj;
   const val = value;
@@ -64,7 +66,13 @@ const toTitleCase = str => {
   return str.join(" ");
 };
 
+const handleError = errCode => {
+  const errMessage = getErrorDAL(errCode);
+  return errMessage || "ERROR CODE NOT FOUND";
+};
+
 exports.displayValueValidation = displayValueValidation;
 exports.hasDecimal = hasDecimal;
 exports.setDisplayPadding = setDisplayPadding;
 exports.toTitleCase = toTitleCase;
+exports.handleError = handleError;
