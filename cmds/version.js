@@ -1,7 +1,7 @@
-const package = require("../package.json");
+const pckg = require('../package.json')
 
 const versionOutput = () => {
-  console.log(`v${package.version}`);
-};
+  console.log(`v${pckg.version}`)
+}
 
-module.exports = versionOutput;
+module.exports = versionOutput

@@ -1,47 +1,47 @@
-const { getCmdDAL } = require("./DAL");
-
-const getCmd = inputCode => {
-  const cmdObj = getCmdDAL(inputCode);
-  if (!cmdObj) handleError("NOT_FOUND");
-
-  return cmdObj;
-};
+const { getCmdDAL } = require('./DAL')
 
 const handleError = errCode => {
-  throw errCode;
-};
+  throw errCode
+}
+
+const getCmd = inputCode => {
+  const cmdObj = getCmdDAL(inputCode)
+  if (!cmdObj) handleError('NOT_FOUND')
+
+  return cmdObj
+}
 
 const appendNumber = (val, appendee, limit = 100) => {
-  val = val.toString();
-  appendee = appendee.toString();
+  const valF = val.toString()
+  const appendeeF = appendee.toString()
 
-  if (val.length >= limit) handleError("EXCESS_LEN");
-  if (val === "" || val === 0) return appendee;
+  if (valF.length >= limit) handleError('EXCESS_LEN')
+  if (valF === '' || valF === 0) return appendeeF
 
-  return val.concat(appendee);
-};
+  return valF.concat(appendeeF)
+}
 
 const appendDecimal = (val, limit = 100) => {
-  val = val.toString();
-  val = !val ? "0" : val;
+  let valF = val.toString()
+  valF = !valF ? '0' : valF
 
-  const decimalCount = (val.match(/[0-9]\./g) || []).length;
-  if (decimalCount >= 1) handleError("DUP_DEC");
-  if (val.length >= limit) handleError("EXCESS_LEN");
+  const decimalCount = (valF.match(/[0-9]\./g) || []).length
+  if (decimalCount >= 1) handleError('DUP_DEC')
+  if (valF.length >= limit) handleError('EXCESS_LEN')
 
-  return val.concat(".");
-};
+  return valF.concat('.')
+}
 
 const invertSign = val => {
-  val = Number(val);
-  if (val === "" || val == 0) return val;
+  const valF = Number(val)
+  if (valF === '' || valF === 0) return val
 
-  const invertedVal = (val * -1).toString();
-  return invertedVal;
-};
+  const invertedVal = (valF * -1).toString()
+  return invertedVal
+}
 
-exports.getCmd = getCmd;
-exports.handleError = handleError;
-exports.appendNumber = appendNumber;
-exports.invertSign = invertSign;
-exports.appendDecimal = appendDecimal;
+exports.getCmd = getCmd
+exports.handleError = handleError
+exports.appendNumber = appendNumber
+exports.invertSign = invertSign
+exports.appendDecimal = appendDecimal

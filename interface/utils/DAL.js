@@ -1,8 +1,8 @@
-const ds = require("../data/dataStore");
+const ds = require('../data/dataStore')
 
 const getErrorDAL = errCode => {
-  const errObj = ds.errors.find(obj => obj.code === errCode);
-  return errObj.message;
-};
+  const errObj = ds.errors.find(obj => obj.code === errCode)
+  return errObj.message
+}
 
-exports.getErrorDAL = getErrorDAL;
+exports.getErrorDAL = getErrorDAL

@@ -1,5 +1,6 @@
-const Interface = require("../interface/interface");
-const InterfaceInst = new Interface({});
+const Interface = require('../interface/interface')
+
+const InterfaceInst = new Interface({})
 
 const menus = {
   main: `
@@ -18,15 +19,15 @@ const menus = {
     application is launched to view a layout of coded values.
 
     `,
-  commands: InterfaceInst.showHelp
-};
+  commands: InterfaceInst.showHelp,
+}
 
 const help = args => {
-  if (args.h == "commands" || args.help == "commands") {
-    menus.commands();
+  if (args.h === 'commands' || args.help === 'commands') {
+    menus.commands()
   } else {
-    console.log(menus.main);
+    console.log(menus.main)
   }
-};
+}
 
-module.exports = help;
+module.exports = help

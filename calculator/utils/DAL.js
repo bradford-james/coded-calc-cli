@@ -1,8 +1,8 @@
-const ds = require("../data/dataStore");
+const ds = require('../data/dataStore')
 
 const getCmdDAL = inputCode => {
-  const cmdObj = ds.commands.find(obj => obj.code === inputCode);
-  return cmdObj;
-};
+  const cmdObj = ds.commands.find(obj => obj.code === inputCode)
+  return cmdObj
+}
 
-exports.getCmdDAL = getCmdDAL;
+exports.getCmdDAL = getCmdDAL

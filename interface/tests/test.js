@@ -8,6 +8,6 @@
 //   expect(InterfaceInst.getDisplay()).toBe(true);
 // });
 
-test("Initial Display", () => {
-  expect(true).toBe(true);
-});
+test('Initial Display', () => {
+  expect(true).toBe(true)
+})
