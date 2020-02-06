@@ -35,16 +35,16 @@ module.exports = class Calculator {
       }
       : this.val2 != ""
         ? {
-          type: "value",
+          type: "val2",
           value: this.val2
         }
         : this.val1 != ""
           ? {
-            type: "value",
+            type: "val1",
             value: this.val1
           }
           : {
-            type: "value",
+            type: "default",
             value: "0"
           };
   }
@@ -129,6 +129,13 @@ module.exports = class Calculator {
           this.val1 = appendNumber(this.val1, cmd.value);
           break;
 
+        case this.state === 4 && cmd.type == "OP_CONT":
+          this.val1 = this.resultant;
+          this.operand = cmd.value;
+          this.val2 = "";
+          this.resultant = "";
+          break;
+
         case this.state === 4 && cmd.type == "OP_EXEC":
           this.val1 = this.resultant;
           this.resultant = this._executeOperation();
@@ -153,6 +160,15 @@ module.exports = class Calculator {
     } catch (err) {
       return this._setReturn(receivedInput, err);
     }
+  }
+
+  revertValue(type, val) {
+    if (type == "val1") {
+      this.val1 = val;
+    } else if (type == "val2") {
+      this.val2 = val;
+    }
+    return this._setReturn("NONE");
   }
 
   _determineState() {

@@ -21,7 +21,7 @@ exports.errors = [
   },
   {
     code: "EXCESS_LEN",
-    message: "LENGTH GREATER THAN ALLOWABLE",
+    message: "VALUE LENGTH GREATER THAN ALLOWABLE",
     display: "Value string length is greater than is allowable"
   },
   {

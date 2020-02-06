@@ -1,51 +1,59 @@
 const { getErrorDAL } = require("./DAL");
 
-const displayValueValidation = valObj => {
-  const { type, value } = valObj;
-  const val = value;
-  const valNum = Number(val);
+const breakdownDisplayVal = (type, val) => {
   const valSign = val.startsWith("-") ? "-" : "";
-  const valAbs = Math.abs(valNum);
-  const formattedVal = val;
-  const exp = "";
+  const valAbs = Math.abs(Number(val)).toString();
+  const hasDecimal = findDecimal(val);
+  const int = Math.floor(valAbs).toString();
+  let decRemainder = Number(valAbs) % 1;
+  decRemainder = decRemainder.toString();
 
-  // TODO Screen character limits
-  if (type == "resultant") {
-    if (valNum >= 10000000000 || valNum <= -10000000000) {
-    } // Set decimal and show exponent (x10^_)
-    if (valNum < 0.00000001 && valNum > -0.00000001) {
-    } // Set decimal and show exponent (x10^-_)
-  } else {
-    if (
-      valNum >= 1000000000 ||
-      valNum <= -1000000000 ||
-      (valNum < 0.00000001 && valNum > -0.00000001)
-    ) {
-      // return error/block
+  let exp = "1";
+  let adjustedVal = "";
+  let revertFlag = false;
+
+  // length validation
+  if (valAbs.length > 10) {
+    if (type == "resultant") {
+      if (int.length > 10) {
+        const stringLen = int.length;
+
+        exp = stringLen - 1;
+        exp = exp.toString();
+
+        adjustedVal = int.slice(0, 10)
+        adjustedVal = Math.round(Number(adjustedVal) * 0.1);
+        adjustedVal = adjustedVal.toString();
+        adjustedVal = adjustedVal.slice(0, 1).concat(".", int.slice(1, adjustedVal.length));
+      } else {
+        adjustedVal = int.slice(0, 11)
+        adjustedVal = Math.round(Number(adjustedVal) * 0.1).toString();
+      }
+    } else if (type == "val1" || type == "val2") {
+      adjustedVal = valAbs.slice(0, 10);
+      revertFlag = true;
     }
+  } else {
+    adjustedVal = valAbs
   }
-  /*
-      if (this.hasDecimal(val) === true) {
-        // round to <= 10 characters total
-        const valAbsLength = valAbs.toString().length;
-        if (valAbsLength > 10) {
-          const excessLength = valAbsLength - 10;
-          const adjustedForRounding = valNum * (10 ^ (excessLength * -1));
-          const roundedVal = Math.round(adjustedForRounding);
-          formattedVal = "";
-        }
-      }*/
+
   return {
-    valSign: valSign,
     origVal: val,
-    formattedVal: formattedVal,
-    exponent: exp
-  };
+    valSign,
+    exp,
+    adjustedVal,
+    valAbs,
+    hasDecimal,
+    int,
+    decRemainder,
+    revertFlag
+  }
 };
 
-const hasDecimal = val => {
+const findDecimal = val => {
   const decimalCount = (val.match(/[0-9]\./g) || []).length;
   if (decimalCount >= 1) return true;
+  return false;
 };
 
 const setDisplayPadding = displayVal => {
@@ -71,8 +79,7 @@ const handleError = errCode => {
   return errMessage || "ERROR CODE NOT FOUND";
 };
 
-exports.displayValueValidation = displayValueValidation;
-exports.hasDecimal = hasDecimal;
+exports.breakdownDisplayVal = breakdownDisplayVal;
 exports.setDisplayPadding = setDisplayPadding;
 exports.toTitleCase = toTitleCase;
 exports.handleError = handleError;

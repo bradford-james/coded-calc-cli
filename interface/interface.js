@@ -10,7 +10,7 @@ const {
   logEndSession
 } = require("./utils/logger");
 const {
-  displayValueValidation,
+  breakdownDisplayVal,
   setDisplayPadding,
   toTitleCase,
   handleError
@@ -59,11 +59,17 @@ module.exports = class CLI {
   }
 
   _getDisplay() {
-    const displayValueObj = this.calculator.getDisplay();
-    const validatedDisplayValueObj = displayValueValidation(displayValueObj);
+    const { type, value } = this.calculator.getDisplay();
 
-    const { valSign, formattedVal, exponent } = validatedDisplayValueObj;
-    const displayVal = valSign.concat(formattedVal);
+    const { valSign, adjustedVal, exp, revertFlag } = breakdownDisplayVal(type, value);
+    const displayVal = valSign.concat(adjustedVal);
+
+    if (revertFlag === true) {
+      const { appState } = this.calculator.revertValue(type, adjustedVal);
+      logError(appState, "EXCESS_LEN");
+      logEvent(appState, "EXCESS_LEN");
+      this._showError("EXCESS_LEN");
+    }
 
     console.log(chalk.blue("---------------"));
     console.log("\n");
@@ -73,8 +79,8 @@ module.exports = class CLI {
       setDisplayPadding(displayVal) +
       chalk.yellow(displayVal) +
       chalk.blue(" |") +
-      (exponent !== "" && exponent !== "1" && exponent !== "0"
-        ? ` *10^${exponent}`
+      (exp !== "" && exp !== "1" && exp !== "0"
+        ? ` * 10^${exp}`
         : "")
     );
     console.log(chalk.blue("---------------"));
