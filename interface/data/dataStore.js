@@ -28,5 +28,15 @@ exports.errors = [
     code: "DUP_DEC",
     message: "ALREADY HAS DECIMAL",
     display: "This value already has a decimal"
+  },
+  {
+    code: "LOWER_LIMIT",
+    message: "LOWER BOUND VALUE HAS BEEN EXCEEDED",
+    display: "This value is lower than the allowable limit"
+  },
+  {
+    code: "UPPER_LIMIT",
+    message: "UPPER BOUND VALUE HAS BEEN EXCEEDED",
+    display: "This value is higher than the allowable limit"
   }
 ];

@@ -10,31 +10,29 @@ const breakdownDisplayVal = (type, val) => {
 
   let exp = "1";
   let adjustedVal = "";
-  let revertFlag = false;
 
   // length validation
   if (valAbs.length > 10) {
-    if (type == "resultant") {
-      if (int.length > 10) {
-        const stringLen = int.length;
+    if (int.length > 10) {
+      const stringLen = int.length;
 
-        exp = stringLen - 1;
-        exp = exp.toString();
+      exp = stringLen - 1;
+      exp = exp.toString();
 
-        adjustedVal = int.slice(0, 10)
-        adjustedVal = Math.round(Number(adjustedVal) * 0.1);
-        adjustedVal = adjustedVal.toString();
-        adjustedVal = adjustedVal.slice(0, 1).concat(".", int.slice(1, adjustedVal.length));
-      } else {
-        adjustedVal = int.slice(0, 11)
-        adjustedVal = Math.round(Number(adjustedVal) * 0.1).toString();
-      }
-    } else if (type == "val1" || type == "val2") {
+      adjustedVal = int.slice(0, 10);
+      adjustedVal = Math.round(Number(adjustedVal) * 0.1);
+      adjustedVal = adjustedVal.toString();
+      adjustedVal = adjustedVal
+        .slice(0, 1)
+        .concat(".", int.slice(1, adjustedVal.length));
+    } else if (hasDecimal) {
       adjustedVal = valAbs.slice(0, 10);
-      revertFlag = true;
+    } else {
+      adjustedVal = valAbs.slice(0, 11);
+      adjustedVal = Math.round(Number(adjustedVal) * 0.1).toString();
     }
   } else {
-    adjustedVal = valAbs
+    adjustedVal = valAbs;
   }
 
   return {
@@ -45,9 +43,8 @@ const breakdownDisplayVal = (type, val) => {
     valAbs,
     hasDecimal,
     int,
-    decRemainder,
-    revertFlag
-  }
+    decRemainder
+  };
 };
 
 const findDecimal = val => {

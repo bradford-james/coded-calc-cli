@@ -30,23 +30,23 @@ module.exports = class Calculator {
 
     return this.resultant != ""
       ? {
-        type: "resultant",
-        value: this.resultant
-      }
+          type: "resultant",
+          value: this.resultant
+        }
       : this.val2 != ""
-        ? {
+      ? {
           type: "val2",
           value: this.val2
         }
-        : this.val1 != ""
-          ? {
-            type: "val1",
-            value: this.val1
-          }
-          : {
-            type: "default",
-            value: "0"
-          };
+      : this.val1 != ""
+      ? {
+          type: "val1",
+          value: this.val1
+        }
+      : {
+          type: "default",
+          value: "0"
+        };
   }
 
   handleInput(receivedInput) {
@@ -60,6 +60,10 @@ module.exports = class Calculator {
         //------------------------
         case this.state === 0 && cmd.type == "NUM":
           this.val1 = appendNumber(this.val1, cmd.value);
+          break;
+
+        case this.state === 0 && cmd.type == "DEC":
+          this.val1 = appendDecimal(this.val1);
           break;
 
         // --------------------------------------
@@ -145,6 +149,9 @@ module.exports = class Calculator {
           this.resultant = invertSign(this.resultant);
           break;
 
+        // ---------------
+        // CLEAR COMMANDS
+        //---------------
         case this.state === 3 && cmd.code == "CLR":
           this.val2 = "";
           break;

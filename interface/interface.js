@@ -27,6 +27,8 @@ const readline = require("readline").createInterface({
 module.exports = class CLI {
   constructor(calculator) {
     this.calculator = calculator;
+    this.UPPER_LIMIT = 1000000000000;
+    this.LOWER_LIMIT = 0.00000001;
   }
 
   run() {
@@ -61,30 +63,45 @@ module.exports = class CLI {
   _getDisplay() {
     const { type, value } = this.calculator.getDisplay();
 
-    const { valSign, adjustedVal, exp, revertFlag } = breakdownDisplayVal(type, value);
-    const displayVal = valSign.concat(adjustedVal);
+    const validated = this._validateCalcValue(value);
+    if (!validated) this.calculator.handleInput("ALL_CLR");
 
-    if (revertFlag === true) {
-      const { appState } = this.calculator.revertValue(type, adjustedVal);
-      logError(appState, "EXCESS_LEN");
-      logEvent(appState, "EXCESS_LEN");
-      this._showError("EXCESS_LEN");
-    }
+    const { valSign, adjustedVal, exp } = breakdownDisplayVal(type, value);
+    const displayVal = valSign.concat(adjustedVal);
 
     console.log(chalk.blue("---------------"));
     console.log("\n");
     console.log(chalk.blue("---------------"));
     console.log(
       chalk.blue("| ") +
-      setDisplayPadding(displayVal) +
-      chalk.yellow(displayVal) +
-      chalk.blue(" |") +
-      (exp !== "" && exp !== "1" && exp !== "0"
-        ? ` * 10^${exp}`
-        : "")
+        setDisplayPadding(displayVal) +
+        chalk.yellow(displayVal) +
+        chalk.blue(" |") +
+        (exp !== "" && exp !== "1" && exp !== "0" ? ` * 10^${exp}` : "")
     );
     console.log(chalk.blue("---------------"));
 
+    return true;
+  }
+
+  _validateCalcValue(value) {
+    const state = { value: value };
+
+    if (
+      value < this.LOWER_LIMIT &&
+      value > this.LOWER_LIMIT * -1 &&
+      value != 0
+    ) {
+      logError(state, "LOWER_LIMIT");
+      logEvent(state, "LOWER_LIMIT");
+      this._showError("LOWER_LIMIT");
+      return false;
+    } else if (value > this.UPPER_LIMIT || value < this.UPPER_LIMIT * -1) {
+      logError(state, "UPPER_LIMIT");
+      logEvent(state, "UPPER_LIMIT");
+      this._showError("UPPER_LIMIT");
+      return false;
+    }
     return true;
   }
 

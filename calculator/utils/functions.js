@@ -23,6 +23,7 @@ const appendNumber = (val, appendee, limit = 100) => {
 
 const appendDecimal = (val, limit = 100) => {
   val = val.toString();
+  val = !val ? "0" : val;
 
   const decimalCount = (val.match(/[0-9]\./g) || []).length;
   if (decimalCount >= 1) handleError("DUP_DEC");
