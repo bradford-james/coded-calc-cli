@@ -1,6 +1,6 @@
 {
   "name": "coded-calculator",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Single input calculator, similar to a simple handheld model, implemented as a CLI tool.",
   "main": "index.js",
   "author": "bradford-james",

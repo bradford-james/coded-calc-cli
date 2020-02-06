@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/bradford-james/Coded-Calculator/compare/v2.0.1...v2.2.0) (2020-02-06)
+
+
+### Features
+
+* **interface:** display value limiting ([810d994](https://github.com/bradford-james/Coded-Calculator/commit/810d994a6b773071b05ffb865068108611b081bb))
+
+
+### Bug Fixes
+
+* **data access:** error code lookup handling ([aa1e5dc](https://github.com/bradford-james/Coded-Calculator/commit/aa1e5dcc4c608877a688d24c931c22a09ec289d4))
+* **display limits:** bug w/ exponential display for continuing equations ([2e2f8bc](https://github.com/bradford-james/Coded-Calculator/commit/2e2f8bc6f78f95728067ca85afa5ba3dde38cbb7))
+
 ### [2.1.2](https://github.com/bradford-james/Coded-Calculator/compare/v2.1.1...v2.1.2) (2020-02-05)
 
 
