@@ -1,57 +1,92 @@
-# Calculator
+# Coded-Calculator
+
+## Getting Started
+
+This application is a single input calculator, similar to a simple handheld model, implemented as a CLI tool. The _buttons_ of the calculator have been mocked with coded values (see below).
+
+```
+-------------------------           -------------------------------
+|                       |           |                             |
+|       -BUTTONS-       |           |         -KEY CODES-         |
+|                       |           |                             |
+-------------------------           -------------------------------
+|   AC/C    | +/- |  +  |           | ALL_CLR/CLR   | SIGN  | ADD |
+-------------------------           -------------------------------
+|  1  |  2  |  3  |  -  |           | ONE   | TWO   | THREE | SUB |
+-------------------------   ---->   -------------------------------
+|  4  |  5  |  6  |  /  |           | FOUR  | FIVE  | SIX   | MUL |
+-------------------------           -------------------------------
+|  7  |  8  |  9  |  x  |           | SEVEN | EIGHT | NINE  | DIV |
+-------------------------           -------------------------------
+|     0     |  .  |  =  |           | ZERO          | DEC   | EQ  |
+-------------------------           -------------------------------
+
+EXT - Exit the application
+```
+
+Terminal view:
+
+```
+---------------
+|           0 |
+---------------
+Enter Command: FIVE
+---------------
+
+---------------
+|           5 |
+---------------
+Enter Command: TWO
+---------------
+
+---------------
+|           52 |
+---------------
+Enter Command: ADD
+---------------
+
+---------------
+|           52 |
+---------------
+Enter Command: SIX
+---------------
+
+---------------
+|           6 |
+---------------
+Enter Command: EQ
+---------------
+
+---------------
+|           58 |
+---------------
+Enter Command:
+---------------
+```
 
 ## \#TODO
 
-- [x] Accept input as singles (number or operand)
-- [x] Will have an item in memory as rolling value
-- [x] Will need memory for operand
-- [x] Some operaters don't require a second value
-- [x] A number must be the first input
-- [x] Sequential operands will replace each other
-- [x] Implement Decimals
-- [x] Prevent multiple decimals
-- [x] Some number modifiers (+/-)
-- [ ] Display limit (rounding)
-- [ ] Decimal limit (rounding)
-- [ ] Value limit (switch to exponent?)
-- [x] Handle errors like divide by zero
-- [x] Always show zero if nothing in memory, initialization
-- [x] Hitting enter again will repeat the operation
-- [x] Clear and all clear
-
-- [x] Add Chalk to output display
 - [ ] Finish writing tests
-- [x] Write errors to log
 - [ ] Publish to NPM Repo
 - [ ] Utility scripts for display last session to CLI, clearing logs, etc
-- [x] git hook for updating NPM version number with git tag versioning
-- [x] git hook script to always check test when committing
-- [x] git hook script to test, commit, version, push, push tags
-- [x] create utility functions files for both
-- [x] further seperate DAL from calculator?
-- [x] error code, lookup messaging
-- [x] denote private functions, values of classes w/ "\_"
-- [x] complete the Changelog.md
+- [ ] add .dockerfile
 
 ## Folder Structure
 
-- **Coded-Calculator**
+- **calculator**
+  - **data**
+  - **tests**
+  - **utils**
+  - calculator.js
+- **cmds**
+- **interface**
+  - **data**
+  - **tests**
+  - **utils**
+  - interface.js
+- index.js
 
-  - **interface**
-    - interface.js
-    - **Utils**
-      - errorLogging.js
-    - **Tests**
-      - test.js
-  - **calculator**
-    - calculator.js
-    - **data**
-      - dataStore.js
-    - **tests**
-      - test.js
-  - index.js
-
-### Commands
+## Commands
 
 Numeric Buttons
 
