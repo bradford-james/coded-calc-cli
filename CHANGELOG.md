@@ -5,10 +5,6 @@
 
 * **ci:** correction to github actions file ([7bf16b9](https://github.com/bradford-james/Coded-Calculator/commit/7bf16b978786d51ee2b07666f7e75015c177cb0c))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-
 ## [2.2.0](https://github.com/bradford-james/Coded-Calculator/compare/v2.0.1...v2.2.0) (2020-02-06)
 
 
