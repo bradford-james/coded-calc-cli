@@ -43,7 +43,6 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "coded-calc-core-js": "^1.1.0",
-    "jest": "^25.1.0",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
