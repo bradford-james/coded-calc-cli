@@ -32,7 +32,7 @@
       "prepare-commit-msg": "",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "post-commit": "",
-      "pre-push": "npm test"
+      "pre-push": ""
     }
   },
   "config": {
