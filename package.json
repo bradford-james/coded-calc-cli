@@ -1,6 +1,6 @@
 {
   "name": "coded-calc",
-  "version": "0.0.0-development",
+  "version": "2.2.1",
   "description": "Single input calculator, similar to a simple handheld model, implemented as a CLI tool.",
   "main": "index.js",
   "author": "bradford-james",
@@ -43,6 +43,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "coded-calc-core-js": "^1.1.0",
+    "jest": "^25.1.0",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
