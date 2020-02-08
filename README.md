@@ -1,4 +1,5 @@
 # Coded-Calculator
+![GitHub package.json version](https://img.shields.io/github/package-json/v/bradford-james/coded-calc-cli)
 
 ## Getting Started
 
