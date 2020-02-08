@@ -1,8 +1,8 @@
+const Calculator = require('coded-calc-core-js')
 const minimist = require('minimist')
 const version = require('./cmds/version')
 const help = require('./cmds/help')
 
-const Calculator = require('./calculator/calc')
 const Interface = require('./interface/interface')
 
 const CalcInst = new Calculator()

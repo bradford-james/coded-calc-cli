@@ -44,7 +44,7 @@ module.exports = class CLI {
           break
 
         case 'HELP':
-          opResult = this._showHelp()
+          opResult = CLI._showHelp()
           break
 
         default:
@@ -53,7 +53,7 @@ module.exports = class CLI {
       }
       if (opResult.success === 'N') {
         logError(opResult.appState, opResult.code)
-        this._showError(opResult.code)
+        CLI._showError(opResult.code)
       }
       logEvent(opResult.appState, opResult.code)
 
@@ -91,17 +91,18 @@ module.exports = class CLI {
     if (
       value < this.LOWER_LIMIT &&
       value > this.LOWER_LIMIT * -1 &&
-      value !== 0
+      // eslint-disable-next-line eqeqeq
+      value != 0
     ) {
       logError(state, 'LOWER_LIMIT')
       logEvent(state, 'LOWER_LIMIT')
-      this._showError('LOWER_LIMIT')
+      CLI._showError('LOWER_LIMIT')
       return false
     }
     if (value > this.UPPER_LIMIT || value < this.UPPER_LIMIT * -1) {
       logError(state, 'UPPER_LIMIT')
       logEvent(state, 'UPPER_LIMIT')
-      this._showError('UPPER_LIMIT')
+      CLI._showError('UPPER_LIMIT')
       return false
     }
     return true
@@ -130,9 +131,9 @@ ${fR}
 ${fR}
 |  1  |  2  |  3  |  -  |  ${g('||')}  | ONE   | TWO   | THREE | SUB |
 ${fR}
-|  4  |  5  |  6  |  /  |  ${g('||')}  | FOUR  | FIVE  | SIX   | MUL |
+|  4  |  5  |  6  |  x  |  ${g('||')}  | FOUR  | FIVE  | SIX   | MUL |
 ${fR}
-|  7  |  8  |  9  |  x  |  ${g('||')}  | SEVEN | EIGHT | NINE  | DIV |
+|  7  |  8  |  9  |  /  |  ${g('||')}  | SEVEN | EIGHT | NINE  | DIV |
 ${fR}
 |     0     |  .  |  =  |  ${g('||')}  | ZERO          | DEC   | EQ  |
 ${fR}

@@ -1,6 +1,6 @@
 {
-  "name": "coded-calculator",
-  "version": "2.2.0",
+  "name": "coded-calc",
+  "version": "0.0.0-development",
   "description": "Single input calculator, similar to a simple handheld model, implemented as a CLI tool.",
   "main": "index.js",
   "author": "bradford-james",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bradford-james/Coded-Calculator.git"
+    "url": "https://github.com/bradford-james/Coded-Calculator.git"
   },
   "scripts": {
     "start": "node bin/coded-calc.js",
@@ -24,8 +24,7 @@
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json)\"",
     "lint": "eslint .",
     "commit": "npm run format && npm run lint && git add . && git cz",
-    "release": "standard-version",
-    "publish-release": "npm run release && git push --follow-tags && npm publish"
+    "release": "git push --follow-tags"
   },
   "husky": {
     "hooks": {
@@ -43,11 +42,16 @@
   },
   "dependencies": {
     "chalk": "^3.0.0",
+    "coded-calc-core-js": "^1.1.0",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@semantic-release/changelog": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.3",
+    "@semantic-release/npm": "^7.0.2",
     "cz-conventional-changelog": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -56,6 +60,6 @@
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.1",
     "prettier": "^1.19.1",
-    "standard-version": "^7.1.0"
+    "semantic-release": "^17.0.2"
   }
 }

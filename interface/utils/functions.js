@@ -65,10 +65,10 @@ const setDisplayPadding = displayVal => {
 
 const toTitleCase = str => {
   const strArr = str.toLowerCase().split(' ')
-  for (let i = 0; i < str.length; i++) {
-    strArr[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1)
+  for (let i = 0; i < strArr.length; i++) {
+    strArr[i] = strArr[i].charAt(0).toUpperCase() + strArr[i].slice(1)
   }
-  return str.join(' ')
+  return strArr.join(' ')
 }
 
 const handleError = errCode => {
